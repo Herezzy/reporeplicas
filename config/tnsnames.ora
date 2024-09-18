@@ -1,0 +1,25 @@
+#
+#
+# sample tnsnames.ora file
+#
+# sample entry
+#<ALIAS> = (DESCRIPTION =(ADDRESS_LIST =
+#              (ADDRESS = (PROTOCOL = TCP)
+#              (HOST = <HOST>)(PORT = <PORT>)))
+#              (CONNECT_DATA = (SID = <SID>)))
+#
+#
+
+
+MIGBCK =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 172.20.3.120 )(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = MIGBCK)
+    )
+)
+
+
+
+
