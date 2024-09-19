@@ -58,6 +58,6 @@ app.get("/", function(req, res){
     res.send("Server running");
 });
 
-app.listen(3000, function () {
+app.listen(4000, function () {
     console.log("gg-monitor REST listening on port 3000!");
 });
