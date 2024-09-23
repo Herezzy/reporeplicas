@@ -7,7 +7,7 @@ var app = express();
 //var{ pcm }  = require("./tables/pcm");
 const morgan = require('morgan');
 const pcm   = require("./tables/pcmT");
-
+const resultadosDB   = require("./tables/pcm2");
 
 var whitelist = [
     "http://localhost",
@@ -55,22 +55,31 @@ app.get("/api/utils/db/test", function (req, res, next) {
   //res.json(rows);
  // });
 
- app.get("/api/tables/pcm", function (req, res, next) {
-  pcm.getPcmList(function (response) {
-    if (response.status === 'ok') {
-      res.json({ success: true, data: response.data }); // Enviar datos exitosamente
-    } else {
-      res.status(500).json({ success: false, message: response.message }); // Enviar error
-    }
-  });
-});
+//  app.get("/api/tables/pcm", function (req, res, next) {
+//   pcm.getPcmList(function (response) {
+//     if (response.status === 'ok') {
+//       res.json({ success: true, data: response.data }); // Enviar datos exitosamente
+//     } else {
+//       res.status(500).json({ success: false, message: response.message }); // Enviar error
+//     }
+//   });
+// });
 
+app.get('/api/resultados', async (req, res) => {
+  try {
+    const resultados = await resultadosDB.obtenerResultados(); // Llamar al método de la clase
+    res.json(resultados); // Devolver los resultados
+  } catch (err) {
+    console.error('Error al obtener resultados:', err.message);
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+});
 
 
 app.get("/", function(req, res){
     res.send("Server running");
 });
 
-app.listen(3000, function () {
+app.listen(4000, function () {
     console.log("gg-monitor REST listening on port 3000!");
 }); 

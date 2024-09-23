@@ -6,46 +6,57 @@ const dbConfig = require('../../config/dbconfig'); // Ruta relativa a dbconfig.j
 SimpleOracleDB.extend(oracledb);
 
 class PCM {
-  async error(err, conn, cb) {
-    if (conn) await this.release(err, conn, cb);
-    else return cb({ status: 'error', message: err.message });
+  async error(err, conn) {
+    if (conn) await conn.close();
+    throw new Error(err.message);
   }
 
-  async release(err, conn, cb, data) {
+  async getPcmlist() {
     try {
-      if (conn) await conn.close();
-      if (err) return cb({ status: 'error', message: err.message });
-      return cb(data); // Retorna los datos correctamente
-    } catch (closeErr) {
-      return cb({ status: 'error', message: closeErr.message });
-    }
-  }
-
-  async getPcmList(cb) {
-    try {
-      // Establecer conexión con Oracle
+      // Establecer conexión con la primera base de datos (la que tiene la tabla PCM)
       const conn = await oracledb.getConnection({
         user: dbConfig.user,
         password: dbConfig.password,
         connectString: dbConfig.connectString,
       });
 
-      // Ejecutar la consulta
-      const result = await conn.execute(`SELECT nombre_pcm, usuario_pcm, password, host FROM pcm WHERE id_pcm = 2`);
+      // Consultar la tabla PCM para obtener las credenciales de la base de datos con id_pcm = 2
+      const result = await conn.execute(
+        `SELECT usuario_pcm, password, host FROM pcm WHERE id_pcm = 2`
+      );
 
-      // Liberar la conexión y retornar los datos
-      this.release(null, conn, cb, {
-        status: 'ok',
-        data: result.rows, // Retorna solo las filas obtenidas
+      if (result.rows.length === 0) {
+        await conn.close();
+        throw new Error('No se encontraron credenciales para id_pcm = 2.');
+      }
+
+      // Extraer las credenciales obtenidas
+      const [usuario_pcm, password, host] = result.rows[0];
+
+      // Cerrar la conexión a la primera base de datos
+      await conn.close();
+
+      // Establecer conexión con la base de datos con id_pcm = 2
+      const connId2 = await oracledb.getConnection({
+        user: usuario_pcm,
+        password: password,
+        connectString: host,
+      
       });
+
+      console.log('Conexión a la base de datos id_pcm = 2 creada con éxito.');
+
+      // Retornar la conexión a la base de datos id_pcm = 2 para que pueda ser usada en otros archivos
+      return connId2;
     } catch (err) {
-      this.error(err, null, cb);
+      console.error('Error al conectar con la base de datos id_pcm = 2:', err.message);
+      throw err;
     }
   }
 }
-const pcm = {
-  pcm: new PCM(),
-};
 
-// Exportar la instancia de PCM
-module.exports = new PCM();
+// Crear una instancia de PCM
+const pcm = new PCM();
+
+// Exportar la conexión a la base de datos con id_pcm = 2
+module.exports = pcm.getPcmlist();
