@@ -6,7 +6,7 @@ var { db } = require("./database/db");
 var app = express();
 //var{ pcm }  = require("./tables/pcm");
 const morgan = require('morgan');
-var{ pcm }  = require("./tables/pcmT");
+const pcm   = require("./tables/pcmT");
 
 
 var whitelist = [
@@ -42,22 +42,35 @@ app.get("/api/utils/db/test", function (req, res, next) {
   });
 });
 
-app.get("/api/tables/pcm",  function (req, res, next) {
-  const params = req.headers;
-  //const rows = await pcm();
-  //const rows =  await pcm.getPcmList();
-  pcm.getPcmList( function (response) {
-    res.json(response);
-  });
+// app.get("/api/tables/pcm",  function (req, res, next) {
+//   const params = req.headers;
+//   //const rows = await pcm();
+//   //const rows =  await pcm.getPcmList();
+//   pcm.getPcmList( function (response) {
+//     res.json(response);
+//   });
+
 
   
   //res.json(rows);
+ // });
+
+ app.get("/api/tables/pcm", function (req, res, next) {
+  pcm.getPcmList(function (response) {
+    if (response.status === 'ok') {
+      res.json({ success: true, data: response.data }); // Enviar datos exitosamente
+    } else {
+      res.status(500).json({ success: false, message: response.message }); // Enviar error
+    }
   });
+});
+
+
 
 app.get("/", function(req, res){
     res.send("Server running");
 });
 
-app.listen(4000, function () {
+app.listen(3000, function () {
     console.log("gg-monitor REST listening on port 3000!");
-});
+}); 

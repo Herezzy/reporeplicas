@@ -1,13 +1,13 @@
-var oracledb = require('oracledb');
-var SimpleOracleDB = require('simple-oracledb');
-var dbConfig = require('../../config/dbconfig');  // Ruta relativa a dbconfig.js
+const oracledb = require('oracledb');
+const SimpleOracleDB = require('simple-oracledb');
+const dbConfig = require('../../config/dbconfig'); // Ruta relativa a dbconfig.js
 
-// Modificar la biblioteca oracledb original
+// Extender la biblioteca oracledb
 SimpleOracleDB.extend(oracledb);
 
 class PCM {
-  error(err, conn, cb) {
-    if (conn) this.release(err, conn, cb);
+  async error(err, conn, cb) {
+    if (conn) await this.release(err, conn, cb);
     else return cb({ status: 'error', message: err.message });
   }
 
@@ -22,31 +22,30 @@ class PCM {
   }
 
   async getPcmList(cb) {
-
     try {
-      // Establecer conexión
+      // Establecer conexión con Oracle
       const conn = await oracledb.getConnection({
         user: dbConfig.user,
         password: dbConfig.password,
         connectString: dbConfig.connectString,
       });
 
-      // Ejecutar la consulta con getListPCM
-      const result = await conn.execute('SELECT nombre_pcm FROM pcm');
+      // Ejecutar la consulta
+      const result = await conn.execute(`SELECT nombre_pcm, usuario_pcm, password, host FROM pcm WHERE id_pcm = 2`);
 
-      // Liberar conexión y retornar los datos
+      // Liberar la conexión y retornar los datos
       this.release(null, conn, cb, {
-      status: 'ok',
-      data: result,  // Retorna los datos obtenidos de la base de datos
+        status: 'ok',
+        data: result.rows, // Retorna solo las filas obtenidas
       });
     } catch (err) {
       this.error(err, null, cb);
     }
   }
 }
-
 const pcm = {
   pcm: new PCM(),
 };
 
-module.exports = pcm;
+// Exportar la instancia de PCM
+module.exports = new PCM();
