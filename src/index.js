@@ -55,15 +55,33 @@ app.get("/api/utils/db/test", function (req, res, next) {
   //res.json(rows);
  // });
 
-//  app.get("/api/tables/pcm", function (req, res, next) {
-//   pcm.getPcmList(function (response) {
-//     if (response.status === 'ok') {
-//       res.json({ success: true, data: response.data }); // Enviar datos exitosamente
-//     } else {
-//       res.status(500).json({ success: false, message: response.message }); // Enviar error
-//     }
-//   });
-// });
+ app.get('/api/tables/pcm', async (req, res) => {
+  try {
+    // Intentar establecer la conexión a la base de datos id_pcm = 2
+    const connId2 = await pcm;
+
+    if (connId2) {
+      console.log('Conexión a la base de datos id_pcm = 2 creada con éxito.');
+      
+      // Enviar respuesta al cliente indicando que la conexión fue exitosa
+      res.json({
+        message: 'Conexión a la base de datos id_pcm = 2 creada con éxito.',
+        connectionDetails: {
+          user: connId2.user,
+          connectString: connId2.connectString
+        }
+      });
+
+      // Cerrar la conexión después de verificarla
+      await connId2.close();
+    } else {
+      res.status(500).json({ error: 'No se pudo establecer la conexión a la base de datos id_pcm = 2.' });
+    }
+  } catch (err) {
+    console.error('Error al conectar con la base de datos id_pcm = 2:', err.message);
+    res.status(500).json({ error: 'Error al conectar con la base de datos', details: err.message });
+  }
+});
 
 app.get('/api/resultados', async (req, res) => {
   try {
@@ -80,6 +98,6 @@ app.get("/", function(req, res){
     res.send("Server running");
 });
 
-app.listen(4000, function () {
+app.listen(3000, function () {
     console.log("gg-monitor REST listening on port 3000!");
 }); 
