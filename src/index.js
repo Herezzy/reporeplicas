@@ -65,7 +65,7 @@ app.get("/api/utils/db/test", function (req, res, next) {
       
       // Enviar respuesta al cliente indicando que la conexión fue exitosa
       res.json({
-        message: 'Conexión a la base de datos id_pcm = 2 creada con éxito.',
+        message: 'Conexión a la base de datos PCM-Medellin creada con éxito.',
         connectionDetails: {
           user: connId2.user,
           connectString: connId2.connectString
