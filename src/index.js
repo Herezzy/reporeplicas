@@ -8,6 +8,7 @@ var app = express();
 const morgan = require('morgan');
 const pcm   = require("./tables/pcmT");
 const resultadosDB   = require("./tables/pcm2");
+const PCMRESULT = require("./tables/pcm2");
 
 var whitelist = [
     "http://localhost",
@@ -85,7 +86,7 @@ app.get("/api/utils/db/test", function (req, res, next) {
 
 app.get('/api/resultados', async (req, res) => {
   try {
-    const resultados = await resultadosDB.obtenerResultados(); // Llamar al método de la clase
+    const resultados = await PCMRESULT.obtenerResultados(); // Llamar al método de la clase
     res.json(resultados); // Devolver los resultados
   } catch (err) {
     console.error('Error al obtener resultados:', err.message);

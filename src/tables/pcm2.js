@@ -29,4 +29,5 @@ class ResultadosDB {
   }
 }
 
-module.exports = new ResultadosDB(); // Exportar una instancia de la clase
+const  PCMRESULT = new ResultadosDB();
+module.exports = PCMRESULT; // Exportar una instancia de la clase
