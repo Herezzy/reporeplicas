@@ -1,0 +1,41 @@
+[33mcommit c44a940001e71dd7ec8b15030028623879c4df20[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Andres Felipe Granados Cano <andres.granados@migracioncolombia.gov.co>
+Date:   Mon Oct 7 16:10:57 2024 -0500
+
+    se hace consulta sin variables en query
+
+[33mcommit e58a03bad1d8b521680efa4effbcd0db12199f46[m
+Author: Andres Felipe Granados Cano <andres.granados@migracioncolombia.gov.co>
+Date:   Tue Oct 1 15:32:15 2024 -0500
+
+    archivo de conexion en poo
+
+[33mcommit 937246535c86f3731bf370bd9a176e2383e0445a[m
+Author: Cristian Andres Robledo Saavedra <cristian.robledo@migracioncolombia.gov.co>
+Date:   Tue Sep 24 14:07:59 2024 -0500
+
+    nuevo end point
+
+[33mcommit 1c1f6acd4cb3dba53d1bf8e6d8561d62dd612af9[m
+Author: Andres Felipe Granados Cano <andres.granados@migracioncolombia.gov.co>
+Date:   Mon Sep 23 12:06:25 2024 -0500
+
+    se crea endpoint para pcm medellin
+
+[33mcommit d3296eb639a055c77ce84c81836a0b3bd378d336[m
+Author: Cristian Andres Robledo Saavedra <cristian.robledo@migracioncolombia.gov.co>
+Date:   Mon Sep 23 11:22:24 2024 -0500
+
+    se hacen cambios en PSMT
+
+[33mcommit eaa11d758dbee73ba88f0608c8a18eb2d7e5f931[m
+Author: Andres Felipe Granados Cano <andres.granados@migracioncolombia.gov.co>
+Date:   Thu Sep 19 08:54:57 2024 -0500
+
+    prueba
+
+[33mcommit f693a16635165a14ca556a0f6e49377e14def4ad[m
+Author: Cristian Andres Robledo Saavedra <cristian.robledo@migracioncolombia.gov.co>
+Date:   Wed Sep 18 16:01:05 2024 -0500
+
+    conexion replicas

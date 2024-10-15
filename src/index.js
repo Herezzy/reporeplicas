@@ -6,9 +6,7 @@ var { db } = require("./database/db");
 var app = express();
 //var{ pcm }  = require("./tables/pcm");
 const morgan = require('morgan');
-const pcm   = require("./tables/pcmT");
-const resultadosDB   = require("./tables/pcm2");
-const PCMRESULT = require("./tables/pcm2");
+const pcm   = require("./tables/Pcm");
 
 var whitelist = [
     "http://localhost",
@@ -56,43 +54,84 @@ app.get("/api/utils/db/test", function (req, res, next) {
   //res.json(rows);
  // });
 
- app.get('/api/tables/pcm', async (req, res) => {
+app.get('/api/tables/pcm', async (req, res) => {
   try {
-    // Intentar establecer la conexión a la base de datos id_pcm = 2
-    const connId2 = await pcm;
-
-    if (connId2) {
-      console.log('Conexión a la base de datos id_pcm = 2 creada con éxito.');
-      
-      // Enviar respuesta al cliente indicando que la conexión fue exitosa
-      res.json({
-        message: 'Conexión a la base de datos PCM-Medellin creada con éxito.',
-        connectionDetails: {
-          user: connId2.user,
-          connectString: connId2.connectString
-        }
-      });
-
-      // Cerrar la conexión después de verificarla
-      await connId2.close();
-    } else {
-      res.status(500).json({ error: 'No se pudo establecer la conexión a la base de datos id_pcm = 2.' });
-    }
+    // Obtener la conexión a la base de datos con id_pcm = 2
+    const listPcm = await pcm.getListPcm(); // Llamar al método de la clase para obtener la conexión
+    res.json({
+      status: 'success',
+      message: 'Consulta efectuada correctamente.',
+      listPcm:listPcm
+    });
+   
   } catch (err) {
-    console.error('Error al conectar con la base de datos id_pcm = 2:', err.message);
-    res.status(500).json({ error: 'Error al conectar con la base de datos', details: err.message });
+    console.error('No se han encontrado datos:', err.message);
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
   }
 });
 
-app.get('/api/resultados', async (req, res) => {
+
+
+app.get('/api/tables/pcm/:id', async (req, res) => {
   try {
-    const resultados = await PCMRESULT.obtenerResultados(); // Llamar al método de la clase
-    res.json(resultados); // Devolver los resultados
+    // Obtener la conexión a la base de datos con id_pcm = 2
+    const id = req.params.id;
+    const listPcm = await pcm.getPcmById(id); // Llamar al método de la clase para obtener la conexión
+    res.json({
+      status: 'success',
+      message: 'Consulta efectuada correctamente.',
+      listPcm:listPcm
+    });
+   
   } catch (err) {
-    console.error('Error al obtener resultados:', err.message);
-    res.status(500).json({ status: 'error', message: err.message });
+    console.error('No se han encontrado datos:', err.message);
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
   }
 });
+
+
+app.get('/api/tables/pcm/status/:id', async (req, res) => {
+  try {
+    // Obtener la conexión a la base de datos con id_pcm = 2
+    const id = req.params.id;
+    const pcmData = await pcm.getPcmById(id); // Llamar al método de la clase para obtener la conexión
+    const pcmStatus = await pcm.getPcmStatus(pcmData[0]);
+    
+    res.json({
+      status: 'success',
+      message: 'Consulta efectuada correctamente.',
+      pcmStatus:pcmStatus
+    });
+   
+  } catch (err) {
+    console.error('No se han encontrado datos:', err.message);
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
+  }
+});
+
+
+
+
+
+
+// app.get('/api/resultados', async (req, res) => {
+//   try {
+//     const resultados = await PCMRESULT.obtenerResultados(); // Llamar al método de la clase
+//     res.json(resultados); // Devolver los resultados
+//   } catch (err) {
+//     console.error('Error al obtener resultados:', err.message);
+//     res.status(500).json({ status: 'error', message: err.message });
+//   }
+// });
 
 
 app.get("/", function(req, res){

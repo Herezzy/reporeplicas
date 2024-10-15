@@ -22,8 +22,13 @@ class DB {
     }
   }
 
+  
+
   async test(data, cb) {
+    
     const { bd } = data;
+    
+     
 
     try {
       // Establecer conexión
@@ -45,7 +50,46 @@ class DB {
       this.error(err, null, cb);
     }
   }
+
+  async getDatabaseConnection() {  
+    try{
+    const conn = await oracledb.getConnection({
+
+    user: dbConfig.user,
+    password: dbConfig.password,
+    connectString: dbConfig.connectString
+  });
+
+  return conn ;
+    }
+    catch (err) {
+      return null;
+    }
+
+
+
+
+  }
+  async getDatabaseConnectionPcm(_user_,_password_,_connectString_) {  
+    try{
+    const conn = await oracledb.getConnection({
+
+    user: _user_,
+    password: _password_,
+    connectString: _connectString_
+  });
+
+  return conn ;
+    }
+    catch (err) {
+      return null;
+    }
+
+
+
+  }
 }
+
 
 const db = {
   db: new DB(),
