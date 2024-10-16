@@ -6,7 +6,8 @@ var { db } = require("./database/db");
 var app = express();
 //var{ pcm }  = require("./tables/pcm");
 const morgan = require('morgan');
-const pcm   = require("./tables/Pcm");
+const pcm   = require("./tables/pcm");
+const consumo   = require("./tables/detalle_consumo");
 
 var whitelist = [
     "http://localhost",
@@ -118,20 +119,28 @@ app.get('/api/tables/pcm/status/:id', async (req, res) => {
   }
 });
 
+app.post('/api/tables/pcm/insert', async (req, res) => {
+  try {
+    // Datos quemados por ahora para probar el insert
+    const insertPcm = await consumo.setPcmData(); // Enviar datos estáticos por ahora
+
+    res.json({
+      status: 'success',
+      message: 'Insert realizado correctamente.',
+      insertPcm: insertPcm
+    });
+   
+  } catch (err) {
+    console.error('Error al realizar el insert:', err.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error interno del servidor. No se pudo realizar el insert.'
+    });
+  }
+});
 
 
 
-
-
-// app.get('/api/resultados', async (req, res) => {
-//   try {
-//     const resultados = await PCMRESULT.obtenerResultados(); // Llamar al método de la clase
-//     res.json(resultados); // Devolver los resultados
-//   } catch (err) {
-//     console.error('Error al obtener resultados:', err.message);
-//     res.status(500).json({ status: 'error', message: err.message });
-//   }
-// });
 
 
 app.get("/", function(req, res){

@@ -48,20 +48,20 @@ class PCM {
       password: dbConfig.password,
       connectString: dbConfig.connectString,
     });
-const result = await conn.execute(
+    const result = await conn.execute(
 
-`SELECT * FROM pcm WHERE id_pcm = ${id}`
-  );
+      `SELECT * FROM pcm WHERE id_pcm = ${id}`
+    );
 
-  if (result.rows.length === 0) {
+    if (result.rows.length === 0) {
+      await conn.close();
+      throw new Error(`No se encontraron credenciales para el ID ${id}`);
+    }
+
+    // Extraer las credenciales obtenidas
+    // const [USUARIO_PCM, PASSWORD, HOST] = result.rows[0];
     await conn.close();
-    throw new Error('No se encontraron credenciales para id_pcm = 2.');
-  }
-
-  // Extraer las credenciales obtenidas
-  // const [USUARIO_PCM, PASSWORD, HOST] = result.rows[0];
-  await conn.close();
-  return result.rows;
+    return result.rows;
 
 }
 
@@ -70,7 +70,8 @@ const result = await conn.execute(
 
 
 
-  async getPcmStatus (pcmData){console.log(pcmData);
+  async getPcmStatus (pcmData){
+    // console.log(pcmData);
 
       try {
         const conn = await oracledb.getConnection({
@@ -78,7 +79,7 @@ const result = await conn.execute(
           password: pcmData[3],
           connectString: pcmData[4]
         });  
-        console.log(conn);
+        // console.log(conn);
         // Ejecutar la consulta
         const result = await conn.execute(`SELECT '${pcmData[1]}' AS PCM
           ,GROUP_NAME AS PROCESO
