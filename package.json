@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-  "start": "node ./src/index.js",
+    "start": "node ./src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./src/index.js"
   },
@@ -16,7 +16,7 @@
     "cors": "~2.8.0",
     "crypto-js": "^4.1.1",
     "express": "~4.17.0",
-    "moment": "2.18.1",
+    "moment": "^2.18.1",
     "morgan": "^1.10.0",
     "multer": "~1.4.0",
     "nodemon": "^3.1.5",

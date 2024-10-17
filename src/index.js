@@ -99,17 +99,22 @@ app.get('/api/tables/pcm/:id', async (req, res) => {
 
 app.get('/api/tables/pcm/status/:id', async (req, res) => {
   try {
-    // Obtener la conexión a la base de datos con id_pcm = 2
+    // Obtener el id del parámetro de la URL
     const id = req.params.id;
-    const pcmData = await pcm.getPcmById(id); // Llamar al método de la clase para obtener la conexión
-    const pcmStatus = await pcm.getPcmStatus(pcmData[0]);
     
+    // Llamar al método para obtener los datos de la PCM
+    const pcmData = await pcm.getPcmById(id);
+    
+    // Obtener el estado de la PCM
+    const pcmStatus = await pcm.getPcmStatus(pcmData[0],id);
+    
+    // Retornar los datos en JSON
     res.json({
       status: 'success',
       message: 'Consulta efectuada correctamente.',
-      pcmStatus:pcmStatus
+      pcmStatus: pcmStatus
     });
-   
+  
   } catch (err) {
     console.error('No se han encontrado datos:', err.message);
     res.status(500).json({
@@ -118,6 +123,7 @@ app.get('/api/tables/pcm/status/:id', async (req, res) => {
     });
   }
 });
+
 
 app.post('/api/tables/pcm/insert', async (req, res) => {
   try {

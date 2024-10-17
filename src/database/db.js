@@ -1,7 +1,7 @@
 var oracledb = require('oracledb');
 var SimpleOracleDB = require('simple-oracledb');
 var dbConfig = require('../../config/dbconfig');  // Ruta relativa a dbconfig.js
-var { getListPCM } = require('../tables/pcm');  // Ajusta la ruta según sea necesario
+// var { getListPCM } = require('../tables/pcm');  // Ajusta la ruta según sea necesario
 
 // Modificar la biblioteca oracledb original
 SimpleOracleDB.extend(oracledb);
