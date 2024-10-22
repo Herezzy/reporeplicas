@@ -12,19 +12,19 @@ class ReplicaDetalle {
     throw new Error(err.message);
   }
 
-  async PcmDataReplica(rows,id) {
+  async PcmDataReplica(rows) {
     let conn; 
     try {
       conn = await db.getDatabaseConnection();
 
       for (let row in rows  ) {
         console.log(rows)
-        var query = `
+        var replicas = `
         INSERT INTO REPLICAS (PCM, PROCESO, ULTIMA_EJECUCION, FECHA_REPORTE, HORAS_FUERA, ESTADO, ERROR)
-         VALUES ('${rows[row].PCM}','${rows[row].PROCESO}','${rows[row].ULTIMA_EJECUCION}','${rows[row].FECHA_REPORTE}','${rows[row].HORAS_FUERA}','${rows[row].ESTADO}','C')`;
+         VALUES ('${rows[row].PCM}','${rows[row].PROCESO}','${rows[row].ULTIMA_EJECUCION}','${rows[row].FECHA_REPORTE}','${rows[row].HORAS_FUERA}','${rows[row].ESTADO})`;
 
-        
-         await conn.execute(query);
+       
+         await conn.execute(replicas);
          await conn.commit();
 
      }; 

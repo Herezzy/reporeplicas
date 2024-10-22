@@ -126,18 +126,19 @@ app.get('/api/tables/pcm/status/:id', async (req, res) => {
 });
 
 
-app.post('/api/tables/pcm/insert/:id', async (req, res) => {
+app.post('/api/tables/pcm/insert/replicas', async (req, res) => {
   try {
     // Datos quemados por ahora para probar el insert
-    const pcmData = await pcm.getPcmById(id);
-    const pcmStatus = await pcm.getPcmStatus(pcmData[0],id);
-    const insertPcm = await replicaD.PcmDataReplica(); // Enviar datos estáticos por ahora
+    // const pcmData = await pcm.getPcmById(id);
+    // const pcmStatus = await pcm.getPcmStatus(pcmData[0],id);
+    const insert = await replicaD.PcmDataReplica(); // Enviar datos estáticos por ahora
 
     res.json({
       status: 'success',
       message: 'Insert realizado correctamente.',
-      insertPcm: insertPcm,
-      pcmStatus: pcmStatus
+      insert: insert,
+      // pcmStatus: pcmData,
+      // pcm2: pcmStatus
 
     });
    

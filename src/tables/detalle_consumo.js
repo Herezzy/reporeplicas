@@ -11,15 +11,15 @@ class DetalleConsumo {
     throw new Error(err.message);
   }
 
-  async setPcmData(rows,id) {
+  async setPcmData(rows) {
     let conn; 
     try {
       conn = await db.getDatabaseConnection();
 
       for (let row in rows  ) {
         console.log(rows)
-        var query = `NSERT INTO DETALLE_CONSUMO (FECHA_CONSULTA, ACCION, RESULTADO, ERROR, ID_REPLICAS)
-         VALUES (TO_TIMESTAMP('${rows[row].ULTIMA_EJECUCION}','RRRR-MM-DD HH24:MI:SS.FF9'),'1','${rows[row].HORAS_FUERA}','${rows[row].HORAS_FUERA}','${id}')`;
+        var query = `INSERT INTO DETALLE_CONSUMO (FECHA_CONSULTA, ACCION, RESULTADO, ERROR)
+         VALUES (TO_TIMESTAMP('${rows[row].ULTIMA_EJECUCION}','RRRR-MM-DD HH24:MI:SS.FF9'),'1','${rows[row].HORAS_FUERA}','${rows[row].HORAS_FUERA}')`;
        
          await conn.execute(query);
          await conn.commit();
@@ -38,4 +38,4 @@ class DetalleConsumo {
 const consumo = new DetalleConsumo();
 
 // Exportar la clase para usarla en otros archivos
-module.exports = consumo;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+module.exports = consumo;        
