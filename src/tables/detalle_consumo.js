@@ -18,9 +18,9 @@ class DetalleConsumo {
 
       for (let row in rows  ) {
         console.log(rows)
-        var query = `
-        INSERT INTO DETALLE_CONSUMO (FECHA_CONSULTA, ACCION, RESULTADO, ERROR, ID_REPLICAS)
+        var query = `NSERT INTO DETALLE_CONSUMO (FECHA_CONSULTA, ACCION, RESULTADO, ERROR, ID_REPLICAS)
          VALUES (TO_TIMESTAMP('${rows[row].ULTIMA_EJECUCION}','RRRR-MM-DD HH24:MI:SS.FF9'),'1','${rows[row].HORAS_FUERA}','${rows[row].HORAS_FUERA}','${id}')`;
+       
          await conn.execute(query);
          await conn.commit();
 
@@ -38,4 +38,4 @@ class DetalleConsumo {
 const consumo = new DetalleConsumo();
 
 // Exportar la clase para usarla en otros archivos
-module.exports = consumo;
+module.exports = consumo;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

@@ -8,6 +8,7 @@ var app = express();
 const morgan = require('morgan');
 const pcm   = require("./tables/pcm");
 const consumo   = require("./tables/detalle_consumo");
+const  replicaD  = require("./tables/replica_detalle");
 
 var whitelist = [
     "http://localhost",
@@ -125,6 +126,33 @@ app.get('/api/tables/pcm/status/:id', async (req, res) => {
 });
 
 
+app.post('/api/tables/pcm/insert/:id', async (req, res) => {
+  try {
+    // Datos quemados por ahora para probar el insert
+    const pcmData = await pcm.getPcmById(id);
+    const pcmStatus = await pcm.getPcmStatus(pcmData[0],id);
+    const insertPcm = await replicaD.PcmDataReplica(); // Enviar datos estáticos por ahora
+
+    res.json({
+      status: 'success',
+      message: 'Insert realizado correctamente.',
+      insertPcm: insertPcm,
+      pcmStatus: pcmStatus
+
+    });
+   
+  } catch (err) {
+    console.error('Error al realizar el insert:', err.message);
+    res.status(500).json({
+      status: 'error',
+      message: 'Error interno del servidor. No se pudo realizar el insert.'
+    });
+  }
+});
+
+
+
+
 app.post('/api/tables/pcm/insert', async (req, res) => {
   try {
     // Datos quemados por ahora para probar el insert
@@ -144,6 +172,8 @@ app.post('/api/tables/pcm/insert', async (req, res) => {
     });
   }
 });
+
+
 
 
 

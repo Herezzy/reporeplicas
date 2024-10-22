@@ -2,6 +2,7 @@ const oracledb = require('oracledb');
 const SimpleOracleDB = require('simple-oracledb');
 const dbConfig = require('../../config/dbconfig'); 
 const {db} = require('../database/db'); 
+// const replicaD = require('../tables/detalle_consumo');
 
 const consumo = require('../tables/detalle_consumo');
 
@@ -96,7 +97,8 @@ let conn;
       );
       console.log(result);
         await conn.close();
-        const resultDetalleConsumo = await consumo.setPcmData(result.rows,id);
+        const resultDetalleConsumo = await consumo.PcmData(result.rows,id);
+        //const resultReplicaD = await replicaD.PcmDataReplicas(result.rows,id);
 
       return result.rows; // Retornar los resultados en JSON
     } catch (err) {
