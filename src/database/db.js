@@ -5,6 +5,8 @@ var dbConfig = require('../../config/dbconfig');  // Ruta relativa a dbconfig.js
 
 // Modificar la biblioteca oracledb original
 SimpleOracleDB.extend(oracledb);
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
+
 
 class DB {
   error(err, conn, cb) {
@@ -38,6 +40,11 @@ class DB {
         connectString: dbConfig.connectString,
       });
 
+      
+
+
+
+      
       // Ejecutar la consulta con getListPCM
       //const result = await getListPCM();  // Asegúrate de que getListPCM está funcionando correctamente
 

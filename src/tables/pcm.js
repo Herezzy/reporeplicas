@@ -1,11 +1,10 @@
 const oracledb = require('oracledb');
 const SimpleOracleDB = require('simple-oracledb');
-const dbConfig = require('../../config/dbconfig'); 
-const {db} = require('../database/db'); 
-// const replicaD = require('../tables/detalle_consumo');
+const dbConfig = require('../../config/dbconfig');
+const {db} = require('../database/db');
 
-const consumo = require('./detalle_consumo');
 const replicaD = require('./replica_detalle');
+// const consumo = require('./detalle_consumo');
 
 SimpleOracleDB.extend(oracledb);
 
@@ -39,30 +38,34 @@ class PCM {
 
 
 
-  
+
 
   async getPcmById(id) {
-    let conn;  
+    let conn;
     try {
-        conn = await db.getDatabaseConnection();  
+        conn = await db.getDatabaseConnection();
 
         // Ejecutar la consulta
         const result = await conn.execute(
-            `SELECT * FROM pcm WHERE id_pcm = :id`,  
-            [id]  
+            `SELECT * FROM pcm WHERE id_pcm = :id`,
+            [id],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT } // Salida como objeto
         );
 
+        // Verificar si se encontraron resultados
         if (result.rows.length === 0) {
             throw new Error(`No se encontraron credenciales para el ID ${id}`);
         }
 
-        return result.rows;  
+        // Devuelve la primera fila como objeto
+        return result.rows[0]; // Retorna el primer resultado como un objeto
+
     } catch (err) {
         console.error('Error al conectar con la base de datos id_pcm', err.message);
-        throw err; 
+        throw err;
     } finally {
         if (conn) {
-            await conn.close();  
+            await conn.close();
         }
     }
 }
@@ -72,15 +75,14 @@ class PCM {
 
 
 
+
 async getPcmStatus (pcmData,id){
 let conn;
+let errorMessage = null; // Definir errorMessage antes del try
+
 
     try {
-      const conn = await oracledb.getConnection({
-        user: pcmData[2],
-        password: pcmData[3],
-        connectString: pcmData[4]
-      });  
+      const {connection,error} = await this.getPcmConnection (pcmData);
       // console.log(conn);
       // Ejecutar la consulta
       const result = await conn.execute(`SELECT '${pcmData[1]}' AS PCM
@@ -94,26 +96,54 @@ let conn;
         FROM ${pcmData[6]}
         WHERE ROUND(((SELECT sysdate FROM dual) - TO_DATE((SUBSTR(AUDIT_TS, 1, 10))||'/'||(SUBSTR(AUDIT_TS, 12, 8)),'YYYY-MM-DD HH24:MI:SS'))*24 ,1) >= 2`,
         [],
-        { outFormat: oracledb.OBJECT } 
+        { outFormat: oracledb.OBJECT }
       );
       console.log(result);
         await conn.close();
-        const resultDetalleConsumo = await consumo.setPcmData(result.rows,id);
-        const resultDetalleConsumo2 = await replicaD.PcmDataReplica(result.rows,id);
-        //const resultReplicaD = await replicaD.PcmDataReplicas(result.rows,id);
+        // const resultDetalleConsumo = await consumo.setPcmData(result.rows,id);
+        const resultDetalleConsumo2 = await replicaD.PcmDataReplica(result.rows,id,errorMessage);
+        // const resultReplicaD = await replicaD.PcmDataReplicas(result.rows,id);
+      
 
-      return result.rows; // Retornar los resultados en JSON
+      return result.rows.id.errorMessage// Retornar los resultados en JSON
     } catch (err) {
+
       await conn.close();
+      errorMessage = err.message; // Captura el mensaje de error
+
       console.error('Error al hacer la consulta:', err.message);
-      throw new Error(err.message);
+      throw new Error(errorMessage);
     }
   }
 
-  
+  async getPcmConnection (pcmData){
+    let conn = null;
+    let errorMessage = null; // Definir errorMessage antes del try
+    
+    // conn = await db.getDatabaseConnection();
 
+        try {
+            conn = await oracledb.getConnection({
+            user: pcmData.USUARIO_PCM,
+            password: pcmData.PASSWORD,
+            connectString: pcmData.HOST
+          });
+        }
+          catch (err) {
 
-}
+            
+
+            errorMessage = err.message; // Captura el mensaje de error
+      
+            console.error('Error al hacer la consulta:', err.message);
+          }
+        
+          return ({connection:conn,error:errorMessage});
+
+        }
+
+      }
+
 
 
 
